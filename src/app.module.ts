@@ -9,6 +9,9 @@ import { MyConfigService } from './my-config/my-config.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SqsModule } from './sqs/sqs.module';
 import { SqsProcessorModule } from './sqs_processor/sqs_processor.module';
+import { DriverModule } from './driver/driver.module';
+import { RiderModule } from './rider/rider.module';
+import { RideModule } from './ride/ride.module';
 
 @Module({
   imports: [
@@ -37,6 +40,9 @@ import { SqsProcessorModule } from './sqs_processor/sqs_processor.module';
     }),
     SqsModule,
     SqsProcessorModule,
+    DriverModule,
+    RiderModule,
+    RideModule,
   ],
   controllers: [AppController],
   providers: [AppService],
