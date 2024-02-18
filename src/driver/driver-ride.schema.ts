@@ -1,5 +1,6 @@
-import { Prop, Schema } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 export enum GeoJSONType {
   Point = 'Point',
 }
@@ -8,7 +9,7 @@ interface Location {
   coordinates: [number, number]; // [longitude, latitude]
 }
 
-enum LuggageEnum {
+export enum LuggageEnum {
   noLuggage = 'NoLuggage',
   small = 'Small',
   medium = 'Medium',
@@ -25,14 +26,12 @@ export class DriverRide {
   userId: mongoose.Types.ObjectId;
 
   @Prop({
-    required: true,
     type: { type: String, default: GeoJSONType.Point, enum: GeoJSONType }, // GeoJSON type
     coordinates: { type: [Number] }, // [longitude, latitude]
   })
   origin: Location;
 
   @Prop({
-    required: true,
     type: { type: String, default: GeoJSONType.Point, enum: GeoJSONType }, // GeoJSON type
     coordinates: { type: [Number] }, // [longitude, latitude]
   })
@@ -47,6 +46,7 @@ export class DriverRide {
   leaving: Date;
 
   // TODO add recurring trip
+  // TODO Implement Stops
 
   // vehicle details
   @Prop({
@@ -55,13 +55,14 @@ export class DriverRide {
     ref: 'UserVehicle',
     type: mongoose.Types.ObjectId,
   })
-  vehicle: mongoose.Types.ObjectId;
+  vehicleId: mongoose.Types.ObjectId;
 
   // Trip Preferences
   @Prop({
-    type: LuggageEnum,
+    type: String,
     index: true,
     required: true,
+    enum: LuggageEnum,
   })
   luggage: LuggageEnum;
 
@@ -85,3 +86,14 @@ export class DriverRide {
   })
   tripDescription: string;
 }
+
+export type DriverRideDocument = DriverRide & Document;
+
+const DriverRideScheme = SchemaFactory.createForClass(DriverRide);
+
+DriverRideScheme.index({
+  origin: '2dsphere',
+  destination: '2dsphere',
+});
+
+export { DriverRideScheme };

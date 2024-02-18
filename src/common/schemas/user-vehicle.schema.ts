@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-enum VehicleTypeEnum {
+export enum VehicleTypeEnum {
   hatchBack = 'Hatchback',
   coupe = 'Coupe',
   convertible = 'Convertible',
@@ -13,6 +13,7 @@ enum VehicleTypeEnum {
   van = 'Van',
 }
 
+@Schema({ timestamps: true, id: true })
 export class UserVehicle {
   @Prop({
     required: true,
@@ -30,8 +31,9 @@ export class UserVehicle {
 
   @Prop({
     required: true,
-    type: VehicleTypeEnum,
+    type: String,
     index: true,
+    enum: VehicleTypeEnum,
   })
   type: VehicleTypeEnum;
 
@@ -55,15 +57,15 @@ export class UserVehicle {
 
   @Prop({
     required: true,
-    type: String,
+    type: [String],
   })
-  photoS3URI: string;
+  vehicleImagesS3URIs: string[];
 
   @Prop({
     required: true,
-    type: String,
+    type: [String],
   })
-  photoS3ObjectURL: string;
+  vehicleImagesObjectURLs: string[];
 }
 
 export type UserVehicleDocument = UserVehicle & Document;

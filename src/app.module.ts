@@ -12,6 +12,8 @@ import { SqsProcessorModule } from './sqs_processor/sqs_processor.module';
 import { DriverModule } from './driver/driver.module';
 import { RiderModule } from './rider/rider.module';
 import { RideModule } from './ride/ride.module';
+import { TokenModule } from './token/token.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { RideModule } from './ride/ride.module';
     DriverModule,
     RiderModule,
     RideModule,
+    TokenModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
