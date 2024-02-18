@@ -5,6 +5,7 @@ import { UserTokenBlacklistDocument } from '../common/schemas/user-token-blackli
 import { InjectModel } from '@nestjs/mongoose';
 import { Events } from '../common/enums/events.enums';
 import { Message } from '@aws-sdk/client-sqs';
+import { UserVehicleDocument } from '../common/schemas/user-vehicle.schema';
 
 @Injectable()
 export class SqsProcessorService {
@@ -14,6 +15,8 @@ export class SqsProcessorService {
     @InjectModel('User') private readonly userCollection: Model<UserDocument>,
     @InjectModel('UserTokenBlacklist')
     private readonly UserTokenBlacklistCollection: Model<UserTokenBlacklistDocument>,
+    @InjectModel('UserVehicle')
+    private readonly userVehicleCollection: Model<UserVehicleDocument>,
   ) {}
 
   async ProcessSqsMessage(messages: Message[]) {
@@ -31,18 +34,24 @@ export class SqsProcessorService {
             }
           } catch (error) {
             this.logger.error('Error Parsing SQS message:', error);
-            throw error;
           }
         }),
       );
     } catch (error) {
       this.logger.error('Error processing SQS messages:', error);
-      throw error;
     }
   }
 
   private async _handleMessageEventsSentBySNS(parsedMessage: any) {
-    const { EVENT_TYPE, user, userId, token, updatedUser } = parsedMessage;
+    const {
+      EVENT_TYPE,
+      user,
+      userId,
+      token,
+      updatedUser,
+      newVehicle,
+      deletedVehicle,
+    } = parsedMessage;
     this.logger.log(
       '_handleMessageEventsSentBySNS',
       EVENT_TYPE,
@@ -50,6 +59,8 @@ export class SqsProcessorService {
       userId,
       token,
       updatedUser,
+      newVehicle,
+      deletedVehicle,
     );
     switch (EVENT_TYPE) {
       case Events.userCreatedByPhone:
@@ -58,12 +69,36 @@ export class SqsProcessorService {
         return this._handleTokenBlackListEvent(token);
       case Events.userUpdated:
         return this._handleUserUpdatedEvent(updatedUser, userId);
+      case Events.newVehicleCreated:
+        return this._handleNewVehicleCreated(newVehicle);
+      case Events.vehicleDeleted:
+        return this._handleVehicleDeleted(deletedVehicle);
       default:
         this.logger.warn(`Unhandled event type: ${EVENT_TYPE}`);
         break;
     }
   }
 
+  private async _handleNewVehicleCreated(newVehicle: any) {
+    try {
+      const vehicle = new this.userVehicleCollection({
+        ...newVehicle,
+      });
+      return vehicle.save();
+    } catch (error) {
+      this.logger.error('_handleNewVehicleCreated-error', error);
+      throw error;
+    }
+  }
+
+  private async _handleVehicleDeleted(deletedVehicle: any) {
+    try {
+      return this.userVehicleCollection.findByIdAndDelete(deletedVehicle._id);
+    } catch (error) {
+      this.logger.error('_handleVehicleDeleted-error', error);
+      throw error;
+    }
+  }
   private async _handleUserCreationByPhone(
     receivedUserObject: any,
     userId: string,

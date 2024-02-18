@@ -46,7 +46,7 @@ async function bootstrap() {
     abortOnError: false,
     cors: true,
   });
-  app.setGlobalPrefix('api/ride');
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // If set to true validator will strip validated object of any properties that do not have any decorators Tip: if no other decorator is suitable for your property use @Allow decorator.
