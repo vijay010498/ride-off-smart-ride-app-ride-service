@@ -46,7 +46,9 @@ async function bootstrap() {
     abortOnError: false,
     cors: true,
   });
-  app.setGlobalPrefix('api');
+
+  const globalPrefix = 'api/ride';
+  app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // If set to true validator will strip validated object of any properties that do not have any decorators Tip: if no other decorator is suitable for your property use @Allow decorator.
@@ -61,7 +63,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config, {
     deepScanRoutes: true,
   });
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(`${globalPrefix}/swagger`, app, document);
 
   await app.listen(3000);
 }

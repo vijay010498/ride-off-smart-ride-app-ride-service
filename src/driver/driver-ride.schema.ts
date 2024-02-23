@@ -47,6 +47,8 @@ export class DriverRide {
 
   // TODO add recurring trip
   // TODO Implement Stops
+  // TODO Implement ride status
+  // TODO Implement ride active
 
   // vehicle details
   @Prop({

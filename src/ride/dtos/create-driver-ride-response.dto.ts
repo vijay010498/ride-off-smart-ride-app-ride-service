@@ -30,14 +30,12 @@ export class CreateDriverRideResponseDto {
   @Expose()
   @Transform(({ value }) => {
     const date = new Date(value);
-    return date.toLocaleString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric',
-    });
+    const isoString = date.toISOString();
+    const formattedDate = isoString.slice(0, 10);
+    const formattedTime = isoString.slice(11, 16);
+    const period = Number(formattedTime.slice(0, 2)) < 12 ? 'AM' : 'PM';
+
+    return `${formattedDate} ${formattedTime} ${period}`;
   })
   leaving: string;
 

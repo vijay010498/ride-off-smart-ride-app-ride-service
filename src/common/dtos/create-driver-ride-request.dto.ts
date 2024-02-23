@@ -42,9 +42,9 @@ export class CreateDriverRideRequestDto {
     description:
       'Trip Leaving / Starting Date and Time (YYYY-MM-DD HH:mm AM/PM)',
   })
-  @IsDateTimeString({
+  @IsFutureDateTime({
     message:
-      'Leaving must be a valid date-time string in format YYYY-MM-DD HH:mm AM/PM',
+      'Leaving date must be in the future in the format YYYY-MM-DD HH:mm AM/PM',
   })
   leaving: string;
 
@@ -89,10 +89,10 @@ export class CreateDriverRideRequestDto {
   tripDescription: string;
 }
 
-function IsDateTimeString(validationOptions?: ValidationOptions) {
+function IsFutureDateTime(validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
-      name: 'isDateTimeString',
+      name: 'isFutureDateTime',
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
@@ -104,7 +104,9 @@ function IsDateTimeString(validationOptions?: ValidationOptions) {
           if (!dateTimeRegex.test(value)) return false;
 
           const parsedDate = Date.parse(value);
-          return !isNaN(parsedDate);
+          if (isNaN(parsedDate)) return false;
+
+          return parsedDate > Date.now();
         },
       },
     });

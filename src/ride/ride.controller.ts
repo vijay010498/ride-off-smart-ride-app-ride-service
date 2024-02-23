@@ -29,7 +29,7 @@ import { Serialize } from '../common/interceptors/serialize.interceptor';
 import { IsSignedUpGuard } from '../common/guards/isSignedUp.guard';
 
 @ApiBearerAuth()
-@ApiTags('RIDE')
+@ApiTags('RIDES')
 @ApiForbiddenResponse({
   description: 'User is blocked',
 })
@@ -39,7 +39,7 @@ import { IsSignedUpGuard } from '../common/guards/isSignedUp.guard';
 @ApiBadRequestResponse({
   description: 'User Does not exist / User Should be SignedUp to get Verified',
 })
-@Controller('ride')
+@Controller('rides')
 @UseInterceptors(CurrentUserInterceptor)
 @UseGuards(
   AccessTokenGuard,
