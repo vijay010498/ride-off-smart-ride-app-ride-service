@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
   UseInterceptors,
@@ -12,6 +13,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
@@ -24,9 +26,12 @@ import { IsFaceVerifiedGuard } from '../common/guards/isFaceVerified.guard';
 import { CreateDriverRideRequestDto } from '../common/dtos/create-driver-ride-request.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { UserDocument } from '../common/schemas/user.schema';
-import { CreateDriverRideResponseDto } from './dtos/create-driver-ride-response.dto';
+import { DriverRideDto } from './dtos/driver-ride.dto';
 import { Serialize } from '../common/interceptors/serialize.interceptor';
 import { IsSignedUpGuard } from '../common/guards/isSignedUp.guard';
+import { RiderService } from '../rider/rider.service';
+import { RiderRideDto } from './dtos/rider-ride.dto';
+import { CreateRiderRideRequestDto } from '../common/dtos/create-rider-ride-request.dto';
 
 @ApiBearerAuth()
 @ApiTags('RIDES')
@@ -48,8 +53,23 @@ import { IsSignedUpGuard } from '../common/guards/isSignedUp.guard';
   TokenBlacklistGuard,
 )
 export class RideController {
-  constructor(private readonly driverService: DriverService) {}
+  constructor(
+    private readonly driverService: DriverService,
+    private readonly riderService: RiderService,
+  ) {}
 
+  @Get('/driver')
+  @ApiOperation({
+    summary: 'Get User Driver Rides',
+  })
+  @ApiResponse({
+    description: 'Get Driver Rides',
+    type: [DriverRideDto],
+  })
+  @Serialize(DriverRideDto)
+  getUserDriverRides(@CurrentUser() user: UserDocument) {
+    return this.driverService.getRides(user);
+  }
   @Post('/driver')
   @UseGuards(IsFaceVerifiedGuard)
   @ApiOperation({
@@ -61,13 +81,29 @@ export class RideController {
   })
   @ApiCreatedResponse({
     description: 'Ride Created',
-    type: CreateDriverRideResponseDto,
+    type: DriverRideDto,
   })
-  @Serialize(CreateDriverRideResponseDto)
+  @Serialize(DriverRideDto)
   createDriverRide(
     @Body() body: CreateDriverRideRequestDto,
     @CurrentUser() user: UserDocument,
   ) {
     return this.driverService.createRide(body, user);
+  }
+
+  @Post('/rider')
+  @ApiOperation({
+    summary: 'Create a Ride as Rider / Passenger',
+  })
+  @ApiCreatedResponse({
+    description: 'Ride Created',
+    type: RiderRideDto,
+  })
+  @Serialize(RiderRideDto)
+  createRiderRide(
+    @Body() body: CreateRiderRideRequestDto,
+    @CurrentUser() user: UserDocument,
+  ) {
+    return this.riderService.createRide(body, user);
   }
 }

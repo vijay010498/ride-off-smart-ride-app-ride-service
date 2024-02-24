@@ -1,30 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 
-export class CreateDriverRideResponseDto {
+export class RiderRideDto {
   @ApiProperty()
   @Expose()
   userId: string;
 
   @ApiProperty()
-  @Transform(({ obj }) => obj.origin.coordinates[0])
+  @Transform(({ obj }) => obj.from.coordinates[0])
   @Expose()
-  originLongitude: number;
+  fromLongitude: number;
 
   @ApiProperty()
-  @Transform(({ obj }) => obj.origin.coordinates[1])
+  @Transform(({ obj }) => obj.from.coordinates[1])
   @Expose()
-  originLatitude: number;
+  fromLatitude: number;
 
   @ApiProperty()
-  @Transform(({ obj }) => obj.destination.coordinates[0])
+  @Transform(({ obj }) => obj.to.coordinates[0])
   @Expose()
-  destinationLongitude: number;
+  toLongitude: number;
 
   @ApiProperty()
-  @Transform(({ obj }) => obj.destination.coordinates[1])
+  @Transform(({ obj }) => obj.to.coordinates[1])
   @Expose()
-  destinationLatitude: number;
+  toLatitude: number;
 
   @ApiProperty()
   @Expose()
@@ -37,25 +37,17 @@ export class CreateDriverRideResponseDto {
 
     return `${formattedDate} ${formattedTime} ${period}`;
   })
-  leaving: string;
+  departing: string;
 
   @ApiProperty()
   @Expose()
-  vehicleId: string;
+  seats: string;
 
   @ApiProperty()
   @Expose()
-  luggage: string;
+  maxPrice: number;
 
   @ApiProperty()
   @Expose()
-  emptySeats: string;
-
-  @ApiProperty()
-  @Expose()
-  seatPrice: number;
-
-  @ApiProperty()
-  @Expose()
-  tripDescription?: string;
+  rideDescription?: string;
 }

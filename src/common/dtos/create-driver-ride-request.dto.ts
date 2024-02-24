@@ -89,7 +89,8 @@ export class CreateDriverRideRequestDto {
   tripDescription: string;
 }
 
-function IsFutureDateTime(validationOptions?: ValidationOptions) {
+// TODO move into common file
+export function IsFutureDateTime(validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       name: 'isFutureDateTime',

@@ -21,6 +21,15 @@ export class DriverService {
     private readonly userVehicleCollection: Model<UserVehicleDocument>,
   ) {}
 
+  async getRides(user: UserDocument) {
+    return this.driverRideCollection
+      .find({
+        userId: user.id,
+      })
+      .populate('vehicleId')
+      .exec();
+  }
+
   async createRide(
     rideRequestDto: CreateDriverRideRequestDto,
     user: UserDocument,
