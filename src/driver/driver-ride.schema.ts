@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export enum GeoJSONType {
@@ -37,6 +37,131 @@ export class DriverRide {
   })
   destination: Location;
 
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originAddress: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationAddress: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originPlaceId: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationPlaceId: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originUrl: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationUrl: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originPostalCode: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationPostalCode: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originCountryShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationCountryShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originCountryLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationCountryLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originProvinceShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationProvinceShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  originProvinceLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  destinationProvinceLongName: string;
   // should include date and time
   @Prop({
     required: true,

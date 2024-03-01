@@ -3,7 +3,11 @@ import { Expose, Transform, Type } from 'class-transformer';
 import { VehicleDto } from './vehicle.dto';
 
 export class DriverRideDto {
-  // TODO add ride ID
+  @ApiProperty()
+  @Transform(({ obj }) => obj._id)
+  @Expose()
+  rideId: string;
+
   @ApiProperty()
   @Expose()
   userId: string;
@@ -27,6 +31,78 @@ export class DriverRideDto {
   @Transform(({ obj }) => obj.destination.coordinates[1])
   @Expose()
   destinationLatitude: number;
+
+  @ApiProperty()
+  @Expose()
+  originAddress: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationAddress: number;
+
+  @ApiProperty()
+  @Expose()
+  originPlaceId: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationPlaceId: number;
+
+  @ApiProperty()
+  @Expose()
+  originUrl: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationUrl: number;
+
+  @ApiProperty()
+  @Expose()
+  originName: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationName: number;
+
+  @ApiProperty()
+  @Expose()
+  originPostalCode: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationPostalCode: number;
+
+  @ApiProperty()
+  @Expose()
+  originCountryShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationCountryShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  originCountryLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationCountryLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  originProvinceShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationProvinceShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  originProvinceLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  destinationProvinceLongName: number;
 
   @ApiProperty()
   @Expose()

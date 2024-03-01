@@ -3,6 +3,11 @@ import { Expose, Transform } from 'class-transformer';
 
 export class RiderRideDto {
   @ApiProperty()
+  @Transform(({ obj }) => obj._id)
+  @Expose()
+  rideId: string;
+
+  @ApiProperty()
   @Expose()
   userId: string;
 

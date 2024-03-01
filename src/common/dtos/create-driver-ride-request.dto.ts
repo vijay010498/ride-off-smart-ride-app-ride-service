@@ -5,38 +5,27 @@ import {
   IsEnum,
   IsString,
   IsOptional,
-  IsLongitude,
-  IsLatitude,
   IsInt,
   Min,
+  IsNotEmpty,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { LuggageEnum } from '../../driver/driver-ride.schema';
 
 export class CreateDriverRideRequestDto {
   @ApiProperty({
-    description: 'Trip Origin - longitude',
+    description: 'Trip Origin - Place Id (Google Maps)',
   })
-  @IsLongitude()
-  originLongitude: number;
+  @IsString()
+  @IsNotEmpty()
+  originPlaceId: string;
 
   @ApiProperty({
-    description: 'Trip Origin - latitude',
+    description: 'Trip Destination - Place Id (Google Maps)',
   })
-  @IsLatitude()
-  originLatitude: number;
-
-  @ApiProperty({
-    description: 'Trip Destination - longitude',
-  })
-  @IsLongitude()
-  destinationLongitude: number;
-
-  @ApiProperty({
-    description: 'Trip Destination - latitude',
-  })
-  @IsLatitude()
-  destinationLatitude: number;
+  @IsString()
+  @IsNotEmpty()
+  destinationPlaceId: string;
 
   @ApiProperty({
     description:
