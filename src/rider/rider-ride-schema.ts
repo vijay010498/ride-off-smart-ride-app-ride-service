@@ -30,6 +30,132 @@ export class RiderRide {
   })
   to: Location;
 
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromAddress: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toAddress: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromPlaceId: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toPlaceId: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromUrl: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toUrl: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromPostalCode: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toPostalCode: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromCountryShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toCountryShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromCountryLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toCountryLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromProvinceShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toProvinceShortName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  fromProvinceLongName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+  })
+  toProvinceLongName: string;
+
   // should include date and time
   @Prop({
     required: true,

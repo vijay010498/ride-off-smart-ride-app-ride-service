@@ -33,6 +33,78 @@ export class RiderRideDto {
 
   @ApiProperty()
   @Expose()
+  fromAddress: number;
+
+  @ApiProperty()
+  @Expose()
+  toAddress: number;
+
+  @ApiProperty()
+  @Expose()
+  fromPlaceId: number;
+
+  @ApiProperty()
+  @Expose()
+  toPlaceId: number;
+
+  @ApiProperty()
+  @Expose()
+  fromUrl: number;
+
+  @ApiProperty()
+  @Expose()
+  toUrl: number;
+
+  @ApiProperty()
+  @Expose()
+  fromName: number;
+
+  @ApiProperty()
+  @Expose()
+  toName: number;
+
+  @ApiProperty()
+  @Expose()
+  fromPostalCode: number;
+
+  @ApiProperty()
+  @Expose()
+  toPostalCode: number;
+
+  @ApiProperty()
+  @Expose()
+  fromCountryShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  toCountryShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  fromCountryLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  toCountryLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  fromProvinceShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  toProvinceShortName: number;
+
+  @ApiProperty()
+  @Expose()
+  fromProvinceLongName: number;
+
+  @ApiProperty()
+  @Expose()
+  toProvinceLongName: number;
+
+  @ApiProperty()
+  @Expose()
   @Transform(({ value }) => {
     const date = new Date(value);
     const isoString = date.toISOString();

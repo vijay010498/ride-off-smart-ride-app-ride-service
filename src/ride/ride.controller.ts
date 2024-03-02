@@ -70,6 +70,19 @@ export class RideController {
   getUserDriverRides(@CurrentUser() user: UserDocument) {
     return this.driverService.getRides(user);
   }
+
+  @Get('/rider')
+  @ApiOperation({
+    summary: 'Get User Rider Rides',
+  })
+  @ApiResponse({
+    description: 'Get Rider Rides',
+    type: [RiderRideDto],
+  })
+  @Serialize(RiderRideDto)
+  getUserRiderRides(@CurrentUser() user: UserDocument) {
+    return this.riderService.getRides(user);
+  }
   @Post('/driver')
   @UseGuards(IsFaceVerifiedGuard)
   @ApiOperation({
@@ -98,6 +111,9 @@ export class RideController {
   @ApiCreatedResponse({
     description: 'Ride Created',
     type: RiderRideDto,
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'Invalid Place Ids',
   })
   @Serialize(RiderRideDto)
   createRiderRide(

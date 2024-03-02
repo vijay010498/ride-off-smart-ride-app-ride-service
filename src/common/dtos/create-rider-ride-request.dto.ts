@@ -1,38 +1,21 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsLatitude,
-  IsLongitude,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { IsFutureDateTime } from './create-driver-ride-request.dto';
 
 export class CreateRiderRideRequestDto {
   @ApiProperty({
-    description: 'Ride From - longitude',
+    description: 'Trip From - Place Id (Google Maps)',
   })
-  @IsLongitude()
-  fromLongitude: number;
+  @IsString()
+  @IsNotEmpty()
+  fromPlaceId: string;
 
   @ApiProperty({
-    description: 'Ride From - latitude',
+    description: 'Trip To - Place Id (Google Maps)',
   })
-  @IsLatitude()
-  fromLatitude: number;
-
-  @ApiProperty({
-    description: 'Ride To - longitude',
-  })
-  @IsLongitude()
-  toLongitude: number;
-
-  @ApiProperty({
-    description: 'Ride To - latitude',
-  })
-  @IsLatitude()
-  toLatitude: number;
+  @IsString()
+  @IsNotEmpty()
+  toPlaceId: string;
 
   @ApiProperty({
     description:
