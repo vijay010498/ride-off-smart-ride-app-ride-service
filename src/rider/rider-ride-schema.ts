@@ -8,6 +8,16 @@ interface Location {
   coordinates: [number, number]; // [longitude, latitude]
 }
 
+export enum RiderRideStatus {
+  created = 'RIDE_CREATED',
+  cancelled = 'RIDE_CANCELLED',
+  booked = 'RIDE_BOOKED_BOOKED',
+  started = 'RIDE_STARTED',
+  completed = 'RIDE_COMPLETED',
+  inProgress = 'RIDE_IN_PROGRESS',
+  pendingResponse = 'RIDE_PENDING_RESPONSE',
+}
+
 @Schema({ timestamps: true, id: true })
 export class RiderRide {
   @Prop({
@@ -163,6 +173,13 @@ export class RiderRide {
     index: true,
   })
   departing: Date;
+
+  @Prop({
+    type: String,
+    enum: RiderRideStatus,
+    default: RiderRideStatus.created,
+  })
+  status: string;
 
   @Prop({
     type: Number,

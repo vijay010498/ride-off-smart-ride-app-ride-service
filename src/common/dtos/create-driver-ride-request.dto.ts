@@ -8,6 +8,7 @@ import {
   IsInt,
   Min,
   IsNotEmpty,
+  IsArray,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { LuggageEnum } from '../../driver/driver-ride.schema';
@@ -26,6 +27,14 @@ export class CreateDriverRideRequestDto {
   @IsString()
   @IsNotEmpty()
   destinationPlaceId: string;
+
+  @ApiProperty({
+    description: 'Array of stops, Place Ids (Google Maps) - ordered',
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  stops: [string];
 
   @ApiProperty({
     description:
@@ -62,13 +71,6 @@ export class CreateDriverRideRequestDto {
   @IsInt({ message: 'Empty seats must be an integer' })
   @Min(1, { message: 'At least 1 empty seat is required' })
   emptySeats: number;
-
-  @ApiProperty({
-    description: 'Price for each Seat',
-  })
-  @IsInt({ message: 'Price must be an integer' })
-  @Min(1, { message: "Price can't be negative or Zero" })
-  seatPrice: number;
 
   @ApiPropertyOptional({
     description: 'Trip Description',

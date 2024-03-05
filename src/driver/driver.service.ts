@@ -86,6 +86,7 @@ export class DriverService {
             destinationPlaceDetails.latitude,
           ],
         },
+        stops: rideRequestDto.stops,
         originAddress: originPlaceDetails.address,
         destinationAddress: destinationPlaceDetails.address,
         originPlaceId: rideRequestDto.originPlaceId,
@@ -108,7 +109,6 @@ export class DriverService {
         vehicleId: rideRequestDto.vehicleId,
         luggage: rideRequestDto.luggage,
         emptySeats: rideRequestDto.emptySeats,
-        seatPrice: rideRequestDto.seatPrice,
         tripDescription: rideRequestDto.tripDescription,
       });
       return driverRide.save();

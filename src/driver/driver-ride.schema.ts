@@ -9,6 +9,16 @@ interface Location {
   coordinates: [number, number]; // [longitude, latitude]
 }
 
+export enum DriverRideStatus {
+  created = 'RIDE_CREATED',
+  cancelled = 'RIDE_CANCELLED',
+  full = 'RIDE_BOOKED_FULL',
+  started = 'RIDE_STARTED',
+  completed = 'RIDE_COMPLETED',
+  inProgress = 'RIDE_IN_PROGRESS',
+  pendingResponse = 'RIDE_PENDING_RESPONSE',
+}
+
 export enum LuggageEnum {
   noLuggage = 'NoLuggage',
   small = 'Small',
@@ -36,6 +46,11 @@ export class DriverRide {
     coordinates: { type: [Number] }, // [longitude, latitude]
   })
   destination: Location;
+
+  @Prop({
+    type: [String],
+  })
+  stops: [string];
 
   @Prop({
     type: String,
@@ -171,9 +186,13 @@ export class DriverRide {
   leaving: Date;
 
   // TODO add recurring trip
-  // TODO Implement Stops
-  // TODO Implement ride status
-  // TODO Implement ride active
+
+  @Prop({
+    type: String,
+    enum: DriverRideStatus,
+    default: DriverRideStatus.created,
+  })
+  status: string;
 
   // vehicle details
   @Prop({
@@ -199,13 +218,6 @@ export class DriverRide {
     index: true,
   })
   emptySeats: number;
-
-  @Prop({
-    type: Number,
-    required: true,
-    index: true,
-  })
-  seatPrice: number;
 
   @Prop({
     type: String,

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { VehicleDto } from './vehicle.dto';
+import { DriverRideStatus } from '../../driver/driver-ride.schema';
 
 export class DriverRideDto {
   @ApiProperty()
@@ -31,6 +32,10 @@ export class DriverRideDto {
   @Transform(({ obj }) => obj.destination.coordinates[1])
   @Expose()
   destinationLatitude: number;
+
+  @ApiProperty()
+  @Expose()
+  stops: [string];
 
   @ApiProperty()
   @Expose()
@@ -117,6 +122,13 @@ export class DriverRideDto {
   })
   leaving: string;
 
+  @ApiProperty({
+    type: String,
+    enum: DriverRideStatus,
+  })
+  @Expose()
+  status: DriverRideStatus;
+
   @ApiProperty()
   @Type(() => VehicleDto)
   @Expose()
@@ -129,10 +141,6 @@ export class DriverRideDto {
   @ApiProperty()
   @Expose()
   emptySeats: string;
-
-  @ApiProperty()
-  @Expose()
-  seatPrice: number;
 
   @ApiProperty()
   @Expose()

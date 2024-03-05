@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
+import { RiderRideStatus } from '../../rider/rider-ride-schema';
 
 export class RiderRideDto {
   @ApiProperty()
@@ -115,6 +116,13 @@ export class RiderRideDto {
     return `${formattedDate} ${formattedTime} ${period}`;
   })
   departing: string;
+
+  @ApiProperty({
+    type: String,
+    enum: RiderRideStatus,
+  })
+  @Expose()
+  status: [string];
 
   @ApiProperty()
   @Expose()
