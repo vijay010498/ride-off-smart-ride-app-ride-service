@@ -47,4 +47,12 @@ export class MyConfigService {
   getRideTopicSNSArn(): string {
     return this.configService.get<string>('RIDE_TOPIC_SNS_ARN');
   }
+
+  getGoogleMapsGeocodeKey(): string {
+    return this.configService.get<string>('google_maps_geocode_Key');
+  }
+
+  getGoogleMapsPlacesKey(): string {
+    return this.configService.get<string>('google_maps_place_key');
+  }
 }

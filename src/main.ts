@@ -30,6 +30,8 @@ async function bootstrap() {
     'aws_sqs_queue_name',
     'aws_sqs_queue_url',
     'aws_region_default',
+    'google_maps_geocode_Key',
+    'google_maps_place_key',
   ];
 
   const missingVariables = requiredEnvVariables.filter((variable) => {

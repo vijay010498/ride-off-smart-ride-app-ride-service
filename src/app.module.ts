@@ -14,6 +14,7 @@ import { RiderModule } from './rider/rider.module';
 import { RideModule } from './ride/ride.module';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UserModule } from './user/user.module';
     RideModule,
     TokenModule,
     UserModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,5 @@
-import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
+import mongoose from 'mongoose';
 export enum GeoJSONType {
   Point = 'Point',
 }
@@ -9,24 +8,18 @@ interface Location {
   coordinates: [number, number]; // [longitude, latitude]
 }
 
-export enum DriverRideStatus {
+export enum RiderRideStatus {
   created = 'RIDE_CREATED',
   cancelled = 'RIDE_CANCELLED',
-  full = 'RIDE_BOOKED_FULL',
+  booked = 'RIDE_BOOKED_BOOKED',
   started = 'RIDE_STARTED',
   completed = 'RIDE_COMPLETED',
   inProgress = 'RIDE_IN_PROGRESS',
   pendingResponse = 'RIDE_PENDING_RESPONSE',
 }
 
-export enum LuggageEnum {
-  noLuggage = 'NoLuggage',
-  small = 'Small',
-  medium = 'Medium',
-  large = 'Large',
-}
 @Schema({ timestamps: true, id: true })
-export class DriverRide {
+export class RiderRide {
   @Prop({
     required: true,
     index: true,
@@ -39,200 +32,179 @@ export class DriverRide {
     type: { type: String, default: GeoJSONType.Point, enum: GeoJSONType }, // GeoJSON type
     coordinates: { type: [Number] }, // [longitude, latitude]
   })
-  origin: Location;
+  from: Location;
 
   @Prop({
     type: { type: String, default: GeoJSONType.Point, enum: GeoJSONType }, // GeoJSON type
     coordinates: { type: [Number] }, // [longitude, latitude]
   })
-  destination: Location;
-
-  @Prop({
-    type: [String],
-  })
-  stops: [string];
+  to: Location;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originAddress: string;
+  fromAddress: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationAddress: string;
+  toAddress: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originPlaceId: string;
+  fromPlaceId: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationPlaceId: string;
+  toPlaceId: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originUrl: string;
+  fromUrl: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationUrl: string;
+  toUrl: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originName: string;
+  fromName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationName: string;
+  toName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originPostalCode: string;
+  fromPostalCode: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationPostalCode: string;
+  toPostalCode: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originCountryShortName: string;
+  fromCountryShortName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationCountryShortName: string;
+  toCountryShortName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originCountryLongName: string;
+  fromCountryLongName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationCountryLongName: string;
+  toCountryLongName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originProvinceShortName: string;
+  fromProvinceShortName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationProvinceShortName: string;
+  toProvinceShortName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  originProvinceLongName: string;
+  fromProvinceLongName: string;
 
   @Prop({
     type: String,
     required: true,
     index: true,
   })
-  destinationProvinceLongName: string;
+  toProvinceLongName: string;
+
   // should include date and time
   @Prop({
     required: true,
     type: Date,
     index: true,
   })
-  leaving: Date;
-
-  // TODO add recurring trip
+  departing: Date;
 
   @Prop({
     type: String,
-    enum: DriverRideStatus,
-    default: DriverRideStatus.created,
+    enum: RiderRideStatus,
+    default: RiderRideStatus.created,
   })
   status: string;
-
-  // vehicle details
-  @Prop({
-    required: true,
-    index: true,
-    ref: 'UserVehicle',
-    type: mongoose.Types.ObjectId,
-  })
-  vehicleId: mongoose.Types.ObjectId;
-
-  // Trip Preferences
-  @Prop({
-    type: String,
-    index: true,
-    required: true,
-    enum: LuggageEnum,
-  })
-  luggage: LuggageEnum;
 
   @Prop({
     type: Number,
     required: true,
-    index: true,
   })
-  emptySeats: number;
+  seats: number;
+
+  @Prop({
+    type: Number,
+  })
+  maxPrice: number;
 
   @Prop({
     type: String,
     required: false,
   })
-  tripDescription: string;
+  rideDescription: string;
 }
 
-export type DriverRideDocument = DriverRide & Document;
+export type RiderRideDocument = RiderRide & Document;
+const RiderRideScheme = SchemaFactory.createForClass(RiderRide);
 
-const DriverRideScheme = SchemaFactory.createForClass(DriverRide);
-
-DriverRideScheme.index({
-  origin: '2dsphere',
-  destination: '2dsphere',
+RiderRideScheme.index({
+  from: '2dsphere',
+  to: '2dsphere',
 });
 
-export { DriverRideScheme };
+export { RiderRideScheme };

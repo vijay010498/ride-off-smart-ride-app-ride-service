@@ -24,6 +24,7 @@
     "@aws-sdk/client-s3": "^3.504.0",
     "@aws-sdk/client-sns": "^3.503.1",
     "@aws-sdk/client-sqs": "^3.502.0",
+    "@googlemaps/google-maps-services-js": "^3.3.42",
     "@nestjs/cache-manager": "^2.2.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
