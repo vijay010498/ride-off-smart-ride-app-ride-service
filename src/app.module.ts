@@ -15,6 +15,7 @@ import { RideModule } from './ride/ride.module';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
+import { SnsModule } from './sns/sns.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { LocationModule } from './location/location.module';
     TokenModule,
     UserModule,
     LocationModule,
+    SnsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

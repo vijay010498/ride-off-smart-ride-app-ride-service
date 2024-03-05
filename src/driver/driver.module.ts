@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DriverRideScheme } from './driver-ride.schema';
 import { UserVehicleSchema } from '../common/schemas/user-vehicle.schema';
 import { LocationModule } from '../location/location.module';
+import { SnsModule } from '../sns/sns.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LocationModule } from '../location/location.module';
       },
     ]),
     LocationModule,
+    SnsModule,
   ],
   providers: [DriverService],
   exports: [DriverService],
