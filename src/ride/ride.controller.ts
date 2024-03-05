@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -32,6 +33,7 @@ import { IsSignedUpGuard } from '../common/guards/isSignedUp.guard';
 import { RiderService } from '../rider/rider.service';
 import { RiderRideDto } from './dtos/rider-ride.dto';
 import { CreateRiderRideRequestDto } from '../common/dtos/create-rider-ride-request.dto';
+import { CancelRideRequestDto } from '../common/dtos/cancel-ride-request.dto';
 
 @ApiBearerAuth()
 @ApiTags('RIDES')
@@ -102,6 +104,38 @@ export class RideController {
     @CurrentUser() user: UserDocument,
   ) {
     return this.driverService.createRide(body, user);
+  }
+
+  @Patch('/driver/cancel')
+  @ApiOperation({
+    summary: 'Cancel a Driver Ride',
+  })
+  @ApiResponse({
+    description: 'Cancel a Driver Ride',
+    type: DriverRideDto,
+  })
+  @Serialize(DriverRideDto)
+  cancelDriverRide(
+    @Body() body: CancelRideRequestDto,
+    @CurrentUser() user: UserDocument,
+  ) {
+    return this.driverService.cancelRide(body.rideId, user);
+  }
+
+  @Patch('/rider/cancel')
+  @ApiOperation({
+    summary: 'Cancel a Rider Ride',
+  })
+  @ApiResponse({
+    description: 'Cancel a Rider Ride',
+    type: RiderRideDto,
+  })
+  @Serialize(RiderRideDto)
+  cancelRiderRide(
+    @Body() body: CancelRideRequestDto,
+    @CurrentUser() user: UserDocument,
+  ) {
+    return this.riderService.cancelRide(body.rideId, user);
   }
 
   @Post('/rider')

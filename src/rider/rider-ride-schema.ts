@@ -1,5 +1,6 @@
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+
 export enum GeoJSONType {
   Point = 'Point',
 }

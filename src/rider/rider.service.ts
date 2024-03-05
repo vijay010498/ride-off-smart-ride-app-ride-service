@@ -1,17 +1,19 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { RiderRideDocument } from './rider-ride-schema';
+import mongoose, { Model } from 'mongoose';
+import { RiderRideDocument, RiderRideStatus } from './rider-ride-schema';
 import { CreateRiderRideRequestDto } from '../common/dtos/create-rider-ride-request.dto';
 import { UserDocument } from '../common/schemas/user.schema';
 import { LocationService } from '../location/location.service';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { GeoJSONType } from '../driver/driver-ride.schema';
+import { SnsService } from '../sns/sns.service';
 
 @Injectable()
 export class RiderService {
@@ -21,6 +23,7 @@ export class RiderService {
     @InjectModel('RiderRide')
     private readonly riderRideCollection: Model<RiderRideDocument>,
     private readonly locationService: LocationService,
+    private readonly snsService: SnsService,
   ) {}
 
   async getRides(user: UserDocument) {
@@ -29,6 +32,28 @@ export class RiderService {
         userId: user.id,
       })
       .exec();
+  }
+
+  async cancelRide(rideId: mongoose.Types.ObjectId, user: UserDocument) {
+    const canceledRide = await this.riderRideCollection.findOneAndUpdate(
+      {
+        _id: rideId,
+        userId: user.id,
+      },
+      {
+        status: RiderRideStatus.cancelled,
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!canceledRide) throw new BadRequestException('Invalid Ride');
+
+    // SNS Event
+    this.snsService.publishRiderRideCancelledEvent(canceledRide);
+
+    return canceledRide;
   }
   async createRide(
     rideRequestDto: CreateRiderRideRequestDto,
@@ -84,7 +109,11 @@ export class RiderService {
         maxPrice: rideRequestDto.maxPrice,
         rideDescription: rideRequestDto.rideDescription,
       });
-      return riderRide.save();
+      const ride = await riderRide.save();
+
+      // SNS Event
+      this.snsService.publishNewRiderRideCreatedEvent(ride);
+      return ride;
     } catch (error) {
       if (error instanceof UnprocessableEntityException) rethrow(error);
 
