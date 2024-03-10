@@ -48,9 +48,9 @@ export class DriverRide {
   destination: Location;
 
   @Prop({
-    type: [String],
+    type: [Object],
   })
-  stops: [string];
+  stops: [object];
 
   @Prop({
     type: String,

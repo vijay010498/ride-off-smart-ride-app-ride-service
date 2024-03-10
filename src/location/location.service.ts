@@ -61,6 +61,7 @@ export class LocationService {
         countryLongName,
         provinceShortName,
         provinceLongName,
+        placeId,
       };
     } catch (error) {
       this.logger.error('getPlaceDetails-error', error);

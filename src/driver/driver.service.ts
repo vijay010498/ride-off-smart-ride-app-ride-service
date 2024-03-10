@@ -76,15 +76,35 @@ export class DriverService {
           'Vehicle Not Found, Please Create new Vehicle',
         );
 
-      const originPlaceDetails = await this.locationService.getPlaceDetails(
-        rideRequestDto.originPlaceId,
-      );
+      const [originPlaceDetails, destinationPlaceDetails] = await Promise.all([
+        this.locationService.getPlaceDetails(rideRequestDto.originPlaceId),
+        this.locationService.getPlaceDetails(rideRequestDto.destinationPlaceId),
+      ]);
 
-      const destinationPlaceDetails =
-        await this.locationService.getPlaceDetails(
-          rideRequestDto.destinationPlaceId,
-        );
+      // Get placeDetails for stops
+      const stopsPromises = rideRequestDto.stops.map(async (stop) => {
+        return this.locationService.getPlaceDetails(stop);
+      });
 
+      const stopsDetails = await Promise.all(stopsPromises);
+
+      const stops = stopsDetails.map((stop) => {
+        return {
+          address: stop.address,
+          longitude: stop.longitude,
+          latitude: stop.latitude,
+          url: stop.url,
+          name: stop.name,
+          postalCode: stop.postalCode,
+          countryShortName: stop.countryShortName,
+          countryLongName: stop.countryLongName,
+          provinceShortName: stop.provinceShortName,
+          provinceLongName: stop.provinceLongName,
+          placeId: stop.placeId,
+        };
+      });
+
+      // TODO add estimation reach time and all
       if (!originPlaceDetails || !Object.keys(originPlaceDetails).length) {
         throw new UnprocessableEntityException('Invalid Origin Location');
       }
@@ -112,7 +132,7 @@ export class DriverService {
             destinationPlaceDetails.latitude,
           ],
         },
-        stops: rideRequestDto.stops,
+        stops,
         originAddress: originPlaceDetails.address,
         destinationAddress: destinationPlaceDetails.address,
         originPlaceId: rideRequestDto.originPlaceId,
