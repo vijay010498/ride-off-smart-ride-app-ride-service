@@ -2,11 +2,35 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   AddressComponent,
   Client,
+  DirectionsRequest,
+  DirectionsResponse,
   Language,
   PlaceDetailsRequest,
   PlaceType2,
+  TravelMode,
+  TravelRestriction,
+  UnitSystem,
 } from '@googlemaps/google-maps-services-js';
 import { MyConfigService } from '../my-config/my-config.service';
+
+export type GetDriverRideLocationDetailsRequest = {
+  originPlaceId: string;
+  destinationPlaceId: string;
+  stops?: [string];
+  departureTime: string;
+};
+
+interface StopDetails {
+  arrivalTime: Date;
+  distanceFromPrevStopInMeters: number;
+  durationFromPrevStopInSeconds: number;
+}
+
+export interface GetDriverRideLocationDetailsResponse {
+  totalRideDurationInSeconds: number;
+  totalRideDistanceInMeters: number;
+  stopDetails: StopDetails[];
+}
 
 @Injectable()
 export class LocationService {
@@ -99,5 +123,58 @@ export class LocationService {
       provinceShortName,
       provinceLongName,
     };
+  }
+
+  async getDriverRideRouteDetails(
+    request: GetDriverRideLocationDetailsRequest,
+  ): Promise<GetDriverRideLocationDetailsResponse> {
+    try {
+      const directionsRequest: DirectionsRequest = {
+        params: {
+          key: this.configService.getGoogleMapsRoutesKey(),
+          origin: `place_id:${request.originPlaceId}`,
+          destination: `place_id:${request.destinationPlaceId}`,
+          mode: TravelMode.driving,
+          avoid: [TravelRestriction.tolls],
+          waypoints: request.stops.map((placeId) => `place_id:${placeId}`),
+          language: Language.en,
+          units: UnitSystem.metric,
+          region: 'ca',
+          departure_time: new Date(request.departureTime),
+          optimize: false,
+        },
+      };
+
+      const { data }: DirectionsResponse =
+        await this.googleMapsClient.directions(directionsRequest);
+
+      const { legs } = data.routes[0];
+
+      let totalRideDurationInSeconds = 0;
+      let totalRideDistanceInMeters = 0;
+      const stopDetails: StopDetails[] = [];
+      let departureTime = new Date(request.departureTime);
+      for (const leg of legs) {
+        const arrivalTime = new Date(departureTime);
+        arrivalTime.setSeconds(arrivalTime.getSeconds() + leg.duration.value);
+        stopDetails.push({
+          arrivalTime,
+          distanceFromPrevStopInMeters: leg.distance.value,
+          durationFromPrevStopInSeconds: leg.duration.value,
+        });
+        departureTime = arrivalTime;
+
+        totalRideDurationInSeconds += leg.duration.value;
+        totalRideDistanceInMeters += leg.distance.value;
+      }
+      return {
+        totalRideDurationInSeconds,
+        totalRideDistanceInMeters,
+        stopDetails,
+      };
+    } catch (error) {
+      this.logger.error('getDriverRideLocationDetails-error', error);
+      throw new Error('Error in Getting Driver Ride Location Details');
+    }
   }
 }

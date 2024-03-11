@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { VehicleDto } from './vehicle.dto';
-import { DriverRideStatus } from '../../driver/driver-ride.schema';
+import { DriverRideStatus, Stop } from '../../driver/driver-ride.schema';
 
 export class DriverRideDto {
   @ApiProperty()
@@ -33,9 +33,11 @@ export class DriverRideDto {
   @Expose()
   destinationLatitude: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Object],
+  })
   @Expose()
-  stops: [string];
+  stops: Stop[];
 
   @ApiProperty()
   @Expose()
@@ -121,6 +123,14 @@ export class DriverRideDto {
     return `${formattedDate} ${formattedTime} ${period}`;
   })
   leaving: string;
+
+  @ApiProperty()
+  @Expose()
+  totalRideDurationInSeconds: number;
+
+  @ApiProperty()
+  @Expose()
+  totalRideDistanceInMeters: number;
 
   @ApiProperty({
     type: String,
