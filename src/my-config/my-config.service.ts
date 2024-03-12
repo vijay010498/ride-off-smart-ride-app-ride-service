@@ -55,4 +55,7 @@ export class MyConfigService {
   getGoogleMapsPlacesKey(): string {
     return this.configService.get<string>('google_maps_place_key');
   }
+  getGoogleMapsRoutesKey(): string {
+    return this.configService.get<string>('google_maps_routes_key');
+  }
 }

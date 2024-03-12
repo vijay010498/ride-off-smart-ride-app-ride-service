@@ -32,6 +32,7 @@ async function bootstrap() {
     'aws_region_default',
     'google_maps_geocode_Key',
     'google_maps_place_key',
+    'google_maps_routes_key',
   ];
 
   const missingVariables = requiredEnvVariables.filter((variable) => {

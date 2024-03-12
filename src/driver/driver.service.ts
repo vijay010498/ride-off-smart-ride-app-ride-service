@@ -10,12 +10,16 @@ import {
   DriverRideDocument,
   DriverRideStatus,
   GeoJSONType,
+  Stop,
 } from './driver-ride.schema';
 import mongoose, { Model } from 'mongoose';
 import { UserVehicleDocument } from '../common/schemas/user-vehicle.schema';
 import { CreateDriverRideRequestDto } from '../common/dtos/create-driver-ride-request.dto';
 import { UserDocument } from '../common/schemas/user.schema';
-import { LocationService } from '../location/location.service';
+import {
+  GetDriverRideLocationDetailsResponse,
+  LocationService,
+} from '../location/location.service';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { SnsService } from '../sns/sns.service';
 
@@ -76,14 +80,50 @@ export class DriverService {
           'Vehicle Not Found, Please Create new Vehicle',
         );
 
-      const originPlaceDetails = await this.locationService.getPlaceDetails(
-        rideRequestDto.originPlaceId,
-      );
+      // Get route details
+      const routeDetails: GetDriverRideLocationDetailsResponse =
+        await this.locationService.getDriverRideRouteDetails({
+          departureTime: rideRequestDto.leaving,
+          destinationPlaceId: rideRequestDto.destinationPlaceId,
+          originPlaceId: rideRequestDto.originPlaceId,
+          stops: rideRequestDto.stops,
+        });
 
-      const destinationPlaceDetails =
-        await this.locationService.getPlaceDetails(
-          rideRequestDto.destinationPlaceId,
-        );
+      const [originPlaceDetails, destinationPlaceDetails] = await Promise.all([
+        this.locationService.getPlaceDetails(rideRequestDto.originPlaceId),
+        this.locationService.getPlaceDetails(rideRequestDto.destinationPlaceId),
+      ]);
+
+      // Get placeDetails for stops
+      const stopsPromises = rideRequestDto.stops.map(async (stop) => {
+        return this.locationService.getPlaceDetails(stop);
+      });
+      const stopsDetails = await Promise.all(stopsPromises);
+
+      const stops: Stop[] = stopsDetails.map((stop, index) => {
+        return {
+          address: stop.address,
+          longitude: stop.longitude,
+          latitude: stop.latitude,
+          coordinates: {
+            type: GeoJSONType.Point,
+            coordinates: [stop.longitude, stop.latitude],
+          },
+          url: stop.url,
+          name: stop.name,
+          postalCode: stop.postalCode,
+          countryShortName: stop.countryShortName,
+          countryLongName: stop.countryLongName,
+          provinceShortName: stop.provinceShortName,
+          provinceLongName: stop.provinceLongName,
+          placeId: stop.placeId,
+          arrivalTime: routeDetails.stopDetails[index].arrivalTime,
+          distanceFromPrevStopInMeters:
+            routeDetails.stopDetails[index].distanceFromPrevStopInMeters,
+          durationFromPrevStopInSeconds:
+            routeDetails.stopDetails[index].durationFromPrevStopInSeconds,
+        };
+      });
 
       if (!originPlaceDetails || !Object.keys(originPlaceDetails).length) {
         throw new UnprocessableEntityException('Invalid Origin Location');
@@ -112,7 +152,7 @@ export class DriverService {
             destinationPlaceDetails.latitude,
           ],
         },
-        stops: rideRequestDto.stops,
+        stops,
         originAddress: originPlaceDetails.address,
         destinationAddress: destinationPlaceDetails.address,
         originPlaceId: rideRequestDto.originPlaceId,
@@ -132,6 +172,8 @@ export class DriverService {
         originProvinceLongName: originPlaceDetails.provinceLongName,
         destinationProvinceLongName: destinationPlaceDetails.provinceLongName,
         leaving: rideRequestDto.leaving,
+        totalRideDurationInSeconds: routeDetails.totalRideDurationInSeconds,
+        totalRideDistanceInMeters: routeDetails.totalRideDistanceInMeters,
         vehicleId: rideRequestDto.vehicleId,
         luggage: rideRequestDto.luggage,
         emptySeats: rideRequestDto.emptySeats,

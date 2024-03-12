@@ -9,6 +9,24 @@ interface Location {
   coordinates: [number, number]; // [longitude, latitude]
 }
 
+export interface Stop {
+  address: string;
+  longitude: number;
+  latitude: number;
+  coordinates: Location;
+  url: string;
+  name: string;
+  postalCode?: string;
+  countryShortName: string;
+  countryLongName: string;
+  provinceShortName: string;
+  provinceLongName: string;
+  placeId: string;
+  arrivalTime: Date;
+  distanceFromPrevStopInMeters: number;
+  durationFromPrevStopInSeconds: number;
+}
+
 export enum DriverRideStatus {
   created = 'RIDE_CREATED',
   cancelled = 'RIDE_CANCELLED',
@@ -48,9 +66,9 @@ export class DriverRide {
   destination: Location;
 
   @Prop({
-    type: [String],
+    type: [Object],
   })
-  stops: [string];
+  stops: Stop[];
 
   @Prop({
     type: String,
@@ -185,6 +203,18 @@ export class DriverRide {
   })
   leaving: Date;
 
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  totalRideDurationInSeconds: number;
+
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  totalRideDistanceInMeters: number;
+
   // TODO add recurring trip
 
   @Prop({
@@ -233,6 +263,7 @@ const DriverRideScheme = SchemaFactory.createForClass(DriverRide);
 DriverRideScheme.index({
   origin: '2dsphere',
   destination: '2dsphere',
+  'stops.coordinates': '2dsphere',
 });
 
 export { DriverRideScheme };
