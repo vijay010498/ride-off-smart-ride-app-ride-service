@@ -17,6 +17,12 @@ export type GetDriverRideLocationDetailsRequest = {
   originPlaceId: string;
   destinationPlaceId: string;
   stops?: [string];
+  leavingTime: string;
+};
+
+export type GetRiderRideLocationDetailsRequest = {
+  fromPlaceId: string;
+  toPlaceId: string;
   departureTime: string;
 };
 
@@ -26,7 +32,7 @@ interface StopDetails {
   durationFromPrevStopInSeconds: number;
 }
 
-export interface GetDriverRideLocationDetailsResponse {
+export interface RideLocationDetailsResponse {
   totalRideDurationInSeconds: number;
   totalRideDistanceInMeters: number;
   stopDetails: StopDetails[];
@@ -127,7 +133,7 @@ export class LocationService {
 
   async getDriverRideRouteDetails(
     request: GetDriverRideLocationDetailsRequest,
-  ): Promise<GetDriverRideLocationDetailsResponse> {
+  ): Promise<RideLocationDetailsResponse> {
     try {
       const directionsRequest: DirectionsRequest = {
         params: {
@@ -140,7 +146,7 @@ export class LocationService {
           language: Language.en,
           units: UnitSystem.metric,
           region: 'ca',
-          departure_time: new Date(request.departureTime),
+          departure_time: new Date(request.leavingTime),
           optimize: false,
         },
       };
@@ -153,7 +159,7 @@ export class LocationService {
       let totalRideDurationInSeconds = 0;
       let totalRideDistanceInMeters = 0;
       const stopDetails: StopDetails[] = [];
-      let departureTime = new Date(request.departureTime);
+      let departureTime = new Date(request.leavingTime);
       for (const leg of legs) {
         const arrivalTime = new Date(departureTime);
         arrivalTime.setSeconds(arrivalTime.getSeconds() + leg.duration.value);
@@ -173,7 +179,50 @@ export class LocationService {
         stopDetails,
       };
     } catch (error) {
-      this.logger.error('getDriverRideLocationDetails-error', error);
+      this.logger.error('getDriverRideRouteDetails-error', error);
+      throw new Error('Error in Getting Driver Ride Location Details');
+    }
+  }
+
+  async getRiderRideRouteDetails(request: GetRiderRideLocationDetailsRequest) {
+    try {
+      const directionsRequest: DirectionsRequest = {
+        params: {
+          key: this.configService.getGoogleMapsRoutesKey(),
+          origin: `place_id:${request.fromPlaceId}`,
+          destination: `place_id:${request.toPlaceId}`,
+          mode: TravelMode.driving,
+          avoid: [TravelRestriction.tolls],
+          language: Language.en,
+          units: UnitSystem.metric,
+          region: 'ca',
+          departure_time: new Date(request.departureTime),
+          optimize: false,
+        },
+      };
+
+      const { data }: DirectionsResponse =
+        await this.googleMapsClient.directions(directionsRequest);
+
+      const { legs } = data.routes[0];
+
+      let totalRideDurationInSeconds = 0;
+      let totalRideDistanceInMeters = 0;
+      let departureTime = new Date(request.departureTime);
+      for (const leg of legs) {
+        const arrivalTime = new Date(departureTime);
+        arrivalTime.setSeconds(arrivalTime.getSeconds() + leg.duration.value);
+        departureTime = arrivalTime;
+
+        totalRideDurationInSeconds += leg.duration.value;
+        totalRideDistanceInMeters += leg.distance.value;
+      }
+      return {
+        totalRideDurationInSeconds,
+        totalRideDistanceInMeters,
+      };
+    } catch (error) {
+      this.logger.error('getRiderRideRouteDetails-error', error);
       throw new Error('Error in Getting Driver Ride Location Details');
     }
   }
