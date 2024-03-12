@@ -132,6 +132,10 @@ export class DriverRideDto {
   @Expose()
   totalRideDistanceInMeters: number;
 
+  @ApiProperty()
+  @Expose()
+  totalRideAverageFuelCost: number;
+
   @ApiProperty({
     type: String,
     enum: DriverRideStatus,

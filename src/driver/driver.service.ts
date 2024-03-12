@@ -22,6 +22,7 @@ import {
 } from '../location/location.service';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { SnsService } from '../sns/sns.service';
+import { MyConfigService } from '../my-config/my-config.service';
 
 @Injectable()
 export class DriverService {
@@ -34,6 +35,7 @@ export class DriverService {
     private readonly driverRideCollection: Model<DriverRideDocument>,
     private readonly locationService: LocationService,
     private readonly snsService: SnsService,
+    private readonly configService: MyConfigService,
   ) {}
 
   async getRides(user: UserDocument) {
@@ -125,6 +127,18 @@ export class DriverService {
         };
       });
 
+      const totalRideDistanceInKm = Math.floor(
+        routeDetails.totalRideDistanceInMeters / 1000,
+      );
+
+      const totalRequiredFuel = Math.floor(
+        totalRideDistanceInKm / vehicle.averageKmPerLitre,
+      );
+
+      const totalRideFuelCost = Math.floor(
+        totalRequiredFuel * parseFloat(this.configService.getAverageFuelCost()),
+      );
+
       if (!originPlaceDetails || !Object.keys(originPlaceDetails).length) {
         throw new UnprocessableEntityException('Invalid Origin Location');
       }
@@ -174,6 +188,7 @@ export class DriverService {
         leaving: rideRequestDto.leaving,
         totalRideDurationInSeconds: routeDetails.totalRideDurationInSeconds,
         totalRideDistanceInMeters: routeDetails.totalRideDistanceInMeters,
+        totalRideAverageFuelCost: totalRideFuelCost,
         vehicleId: rideRequestDto.vehicleId,
         luggage: rideRequestDto.luggage,
         emptySeats: rideRequestDto.emptySeats,

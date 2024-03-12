@@ -215,6 +215,12 @@ export class DriverRide {
   })
   totalRideDistanceInMeters: number;
 
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  totalRideAverageFuelCost: number;
+
   // TODO add recurring trip
 
   @Prop({

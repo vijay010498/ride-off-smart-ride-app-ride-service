@@ -27,6 +27,10 @@ export class VehicleDto {
   licensePlate: string;
 
   @ApiProperty()
+  @Expose()
+  averageKmPerLitre: number;
+
+  @ApiProperty()
   @Transform(({ obj }) => obj.vehicleImagesObjectURLs)
   @Expose()
   vehicleImages: string[];
