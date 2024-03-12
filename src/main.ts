@@ -33,6 +33,7 @@ async function bootstrap() {
     'google_maps_geocode_Key',
     'google_maps_place_key',
     'google_maps_routes_key',
+    'AVG_FUEL_COST',
   ];
 
   const missingVariables = requiredEnvVariables.filter((variable) => {

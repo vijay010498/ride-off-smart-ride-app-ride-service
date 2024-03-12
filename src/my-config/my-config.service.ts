@@ -58,4 +58,8 @@ export class MyConfigService {
   getGoogleMapsRoutesKey(): string {
     return this.configService.get<string>('google_maps_routes_key');
   }
+
+  getAverageFuelCost(): string {
+    return this.configService.get<string>('AVG_FUEL_COST');
+  }
 }

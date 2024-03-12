@@ -5,6 +5,7 @@ import { DriverRideScheme } from './driver-ride.schema';
 import { UserVehicleSchema } from '../common/schemas/user-vehicle.schema';
 import { LocationModule } from '../location/location.module';
 import { SnsModule } from '../sns/sns.module';
+import { MyConfigModule } from '../my-config/my-config.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SnsModule } from '../sns/sns.module';
         schema: UserVehicleSchema,
       },
     ]),
+    MyConfigModule,
     LocationModule,
     SnsModule,
   ],
