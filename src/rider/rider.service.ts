@@ -60,12 +60,17 @@ export class RiderService {
     user: UserDocument,
   ) {
     try {
-      const fromPlaceDetails = await this.locationService.getPlaceDetails(
-        rideRequestDto.fromPlaceId,
-      );
-      const toPlaceDetails = await this.locationService.getPlaceDetails(
-        rideRequestDto.toPlaceId,
-      );
+      // Get route Details
+      const [routeDetails, fromPlaceDetails, toPlaceDetails] =
+        await Promise.all([
+          this.locationService.getRiderRideRouteDetails({
+            departureTime: rideRequestDto.departing,
+            fromPlaceId: rideRequestDto.fromPlaceId,
+            toPlaceId: rideRequestDto.toPlaceId,
+          }),
+          this.locationService.getPlaceDetails(rideRequestDto.fromPlaceId),
+          this.locationService.getPlaceDetails(rideRequestDto.toPlaceId),
+        ]);
 
       if (!fromPlaceDetails || !Object.keys(fromPlaceDetails).length) {
         throw new UnprocessableEntityException('Invalid From Location');
@@ -105,6 +110,8 @@ export class RiderService {
         fromProvinceLongName: fromPlaceDetails.provinceLongName,
         toProvinceLongName: toPlaceDetails.provinceLongName,
         departing: rideRequestDto.departing,
+        totalRideDistanceInMeters: routeDetails.totalRideDistanceInMeters,
+        totalRideDurationInSeconds: routeDetails.totalRideDurationInSeconds,
         seats: rideRequestDto.seats,
         maxPrice: rideRequestDto.maxPrice,
         rideDescription: rideRequestDto.rideDescription,

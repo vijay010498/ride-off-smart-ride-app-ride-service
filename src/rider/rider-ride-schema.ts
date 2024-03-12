@@ -176,6 +176,18 @@ export class RiderRide {
   departing: Date;
 
   @Prop({
+    required: true,
+    type: Number,
+  })
+  totalRideDurationInSeconds: number;
+
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  totalRideDistanceInMeters: number;
+
+  @Prop({
     type: String,
     enum: RiderRideStatus,
     default: RiderRideStatus.created,

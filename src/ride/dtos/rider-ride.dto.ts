@@ -117,6 +117,14 @@ export class RiderRideDto {
   })
   departing: string;
 
+  @ApiProperty()
+  @Expose()
+  totalRideDurationInSeconds: number;
+
+  @ApiProperty()
+  @Expose()
+  totalRideDistanceInMeters: number;
+
   @ApiProperty({
     type: String,
     enum: RiderRideStatus,

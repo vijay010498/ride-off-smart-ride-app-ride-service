@@ -17,7 +17,7 @@ import { UserVehicleDocument } from '../common/schemas/user-vehicle.schema';
 import { CreateDriverRideRequestDto } from '../common/dtos/create-driver-ride-request.dto';
 import { UserDocument } from '../common/schemas/user.schema';
 import {
-  GetDriverRideLocationDetailsResponse,
+  RideLocationDetailsResponse,
   LocationService,
 } from '../location/location.service';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
@@ -81,9 +81,9 @@ export class DriverService {
         );
 
       // Get route details
-      const routeDetails: GetDriverRideLocationDetailsResponse =
+      const routeDetails: RideLocationDetailsResponse =
         await this.locationService.getDriverRideRouteDetails({
-          departureTime: rideRequestDto.leaving,
+          leavingTime: rideRequestDto.leaving,
           destinationPlaceId: rideRequestDto.destinationPlaceId,
           originPlaceId: rideRequestDto.originPlaceId,
           stops: rideRequestDto.stops,
