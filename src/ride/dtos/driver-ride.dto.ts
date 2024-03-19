@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { VehicleDto } from './vehicle.dto';
-import { DriverRideStatus, Stop } from '../../driver/driver-ride.schema';
+import { DriverRideStatus } from '../../driver/driver-ride.schema';
+import { StopDto } from './stop.dto';
+import { DateTime } from 'luxon';
 
 export class DriverRideDto {
   @ApiProperty()
@@ -33,11 +35,10 @@ export class DriverRideDto {
   @Expose()
   destinationLatitude: number;
 
-  @ApiProperty({
-    type: [Object],
-  })
+  @ApiProperty()
+  @Type(() => StopDto)
   @Expose()
-  stops: Stop[];
+  stops: StopDto[];
 
   @ApiProperty()
   @Expose()
@@ -114,15 +115,18 @@ export class DriverRideDto {
   @ApiProperty()
   @Expose()
   @Transform(({ value }) => {
-    const date = new Date(value);
-    const isoString = date.toISOString();
-    const formattedDate = isoString.slice(0, 10);
-    const formattedTime = isoString.slice(11, 16);
-    const period = Number(formattedTime.slice(0, 2)) < 12 ? 'AM' : 'PM';
-
-    return `${formattedDate} ${formattedTime} ${period}`;
+    const date = DateTime.fromISO(new Date(value).toISOString());
+    return date.toLocaleString(DateTime.DATETIME_SHORT);
   })
   leaving: string;
+
+  @ApiProperty()
+  @Expose()
+  @Transform(({ value }) => {
+    const date = DateTime.fromISO(new Date(value).toISOString());
+    return date.toLocaleString(DateTime.DATETIME_SHORT);
+  })
+  arrivalTime: string;
 
   @ApiProperty()
   @Expose()

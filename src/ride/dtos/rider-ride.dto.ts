@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import { RiderRideStatus } from '../../rider/rider-ride-schema';
+import { DateTime } from 'luxon';
 
 export class RiderRideDto {
   @ApiProperty()
@@ -107,13 +108,8 @@ export class RiderRideDto {
   @ApiProperty()
   @Expose()
   @Transform(({ value }) => {
-    const date = new Date(value);
-    const isoString = date.toISOString();
-    const formattedDate = isoString.slice(0, 10);
-    const formattedTime = isoString.slice(11, 16);
-    const period = Number(formattedTime.slice(0, 2)) < 12 ? 'AM' : 'PM';
-
-    return `${formattedDate} ${formattedTime} ${period}`;
+    const date = DateTime.fromISO(new Date(value).toISOString());
+    return date.toLocaleString(DateTime.DATETIME_SHORT);
   })
   departing: string;
 

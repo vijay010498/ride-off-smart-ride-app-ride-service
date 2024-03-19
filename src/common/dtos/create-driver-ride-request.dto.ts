@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { LuggageEnum } from '../../driver/driver-ride.schema';
+import { DateTime } from 'luxon';
 
 export class CreateDriverRideRequestDto {
   @ApiProperty({
@@ -95,10 +96,12 @@ export function IsFutureDateTime(validationOptions?: ValidationOptions) {
 
           if (!dateTimeRegex.test(value)) return false;
 
-          const parsedDate = Date.parse(value);
-          if (isNaN(parsedDate)) return false;
+          const parsedDate = DateTime.fromFormat(value, 'yyyy-MM-dd hh:mm a', {
+            zone: 'America/New_York',
+          });
+          const currentDateTime = DateTime.local().setZone('America/New_York');
 
-          return parsedDate > Date.now();
+          return parsedDate.toMillis() > currentDateTime.toMillis();
         },
       },
     });
