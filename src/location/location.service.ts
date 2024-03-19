@@ -36,6 +36,7 @@ export interface RideLocationDetailsResponse {
   totalRideDurationInSeconds: number;
   totalRideDistanceInMeters: number;
   stopDetails: StopDetails[];
+  arrivalTime: Date;
 }
 
 @Injectable()
@@ -173,10 +174,17 @@ export class LocationService {
         totalRideDurationInSeconds += leg.duration.value;
         totalRideDistanceInMeters += leg.distance.value;
       }
+
+      const arrivalAtDestination = new Date(departureTime);
+      arrivalAtDestination.setSeconds(
+        arrivalAtDestination.getSeconds() +
+          legs[legs.length - 1].duration.value,
+      );
       return {
         totalRideDurationInSeconds,
         totalRideDistanceInMeters,
         stopDetails,
+        arrivalTime: arrivalAtDestination,
       };
     } catch (error) {
       this.logger.error('getDriverRideRouteDetails-error', error);

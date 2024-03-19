@@ -73,14 +73,12 @@ export class DriverRide {
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originAddress: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationAddress: string;
 
@@ -101,14 +99,12 @@ export class DriverRide {
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originUrl: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationUrl: string;
 
@@ -128,71 +124,61 @@ export class DriverRide {
 
   @Prop({
     type: String,
-    required: true,
-    index: true,
+    required: false,
   })
   originPostalCode: string;
 
   @Prop({
     type: String,
-    required: true,
-    index: true,
+    required: false,
   })
   destinationPostalCode: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originCountryShortName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationCountryShortName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originCountryLongName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationCountryLongName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originProvinceShortName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationProvinceShortName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   originProvinceLongName: string;
 
   @Prop({
     type: String,
     required: true,
-    index: true,
   })
   destinationProvinceLongName: string;
   // should include date and time
@@ -202,6 +188,13 @@ export class DriverRide {
     index: true,
   })
   leaving: Date;
+
+  @Prop({
+    required: true,
+    type: Date,
+    index: true,
+  })
+  arrivalTime: Date;
 
   @Prop({
     required: true,
@@ -230,10 +223,10 @@ export class DriverRide {
   })
   status: string;
 
+  // TODO also append vehicle details as document
   // vehicle details
   @Prop({
     required: true,
-    index: true,
     ref: 'UserVehicle',
     type: mongoose.Types.ObjectId,
   })

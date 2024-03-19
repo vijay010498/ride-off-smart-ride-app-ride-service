@@ -186,6 +186,7 @@ export class DriverService {
         originProvinceLongName: originPlaceDetails.provinceLongName,
         destinationProvinceLongName: destinationPlaceDetails.provinceLongName,
         leaving: rideRequestDto.leaving,
+        arrivalTime: routeDetails.arrivalTime,
         totalRideDurationInSeconds: routeDetails.totalRideDurationInSeconds,
         totalRideDistanceInMeters: routeDetails.totalRideDistanceInMeters,
         totalRideAverageFuelCost: totalRideFuelCost,
