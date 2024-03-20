@@ -162,5 +162,9 @@ export class DriverRideDto {
 
   @ApiProperty()
   @Expose()
+  availableSeats: string;
+
+  @ApiProperty()
+  @Expose()
   tripDescription?: string;
 }

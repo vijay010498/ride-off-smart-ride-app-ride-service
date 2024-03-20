@@ -44,6 +44,9 @@ export class DriverService {
         userId: user.id,
       })
       .populate('vehicleId')
+      .sort({
+        createdAt: 'descending',
+      })
       .exec();
   }
 
@@ -193,6 +196,7 @@ export class DriverService {
         vehicleId: rideRequestDto.vehicleId,
         luggage: rideRequestDto.luggage,
         emptySeats: rideRequestDto.emptySeats,
+        availableSeats: rideRequestDto.emptySeats, // initially available seats = empty seats
         tripDescription: rideRequestDto.tripDescription,
       });
       const ride = await driverRide.save();

@@ -249,6 +249,13 @@ export class DriverRide {
   emptySeats: number;
 
   @Prop({
+    type: Number,
+    required: true,
+    index: true,
+  })
+  availableSeats: number;
+
+  @Prop({
     type: String,
     required: false,
   })
