@@ -23,6 +23,7 @@ import {
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { SnsService } from '../sns/sns.service';
 import { MyConfigService } from '../my-config/my-config.service';
+import { request } from 'express';
 
 @Injectable()
 export class DriverService {
@@ -100,7 +101,7 @@ export class DriverService {
       ]);
 
       // Get placeDetails for stops
-      const stopsPromises = rideRequestDto.stops.map(async (stop) => {
+      const stopsPromises = rideRequestDto?.stops.map(async (stop) => {
         return this.locationService.getPlaceDetails(stop);
       });
       const stopsDetails = await Promise.all(stopsPromises);

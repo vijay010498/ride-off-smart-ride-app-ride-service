@@ -35,7 +35,7 @@ export class CreateDriverRideRequestDto {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  stops: [string];
+  stops?: [] = [];
 
   @ApiProperty({
     description:

@@ -16,7 +16,7 @@ import { MyConfigService } from '../my-config/my-config.service';
 export type GetDriverRideLocationDetailsRequest = {
   originPlaceId: string;
   destinationPlaceId: string;
-  stops?: [string];
+  stops?: [];
   leavingTime: string;
 };
 
@@ -143,7 +143,7 @@ export class LocationService {
           destination: `place_id:${request.destinationPlaceId}`,
           mode: TravelMode.driving,
           avoid: [TravelRestriction.tolls],
-          waypoints: request.stops.map((placeId) => `place_id:${placeId}`),
+          waypoints: request?.stops.map((placeId) => `place_id:${placeId}`),
           language: Language.en,
           units: UnitSystem.metric,
           region: 'ca',

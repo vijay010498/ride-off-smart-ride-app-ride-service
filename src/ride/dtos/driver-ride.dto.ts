@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { VehicleDto } from './vehicle.dto';
 import { DriverRideStatus } from '../../driver/driver-ride.schema';
