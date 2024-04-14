@@ -23,7 +23,6 @@ import {
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { SnsService } from '../sns/sns.service';
 import { MyConfigService } from '../my-config/my-config.service';
-import { request } from 'express';
 
 @Injectable()
 export class DriverService {
@@ -38,18 +37,6 @@ export class DriverService {
     private readonly snsService: SnsService,
     private readonly configService: MyConfigService,
   ) {}
-
-  async getRides(user: UserDocument) {
-    return this.driverRideCollection
-      .find({
-        userId: user.id,
-      })
-      .populate('vehicleId')
-      .sort({
-        createdAt: 'descending',
-      })
-      .exec();
-  }
 
   async cancelRide(rideId: mongoose.Types.ObjectId, user: UserDocument) {
     const canceledRide = await this.driverRideCollection.findOneAndUpdate(

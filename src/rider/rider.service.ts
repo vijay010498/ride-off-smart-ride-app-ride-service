@@ -26,14 +26,6 @@ export class RiderService {
     private readonly snsService: SnsService,
   ) {}
 
-  async getRides(user: UserDocument) {
-    return this.riderRideCollection
-      .find({
-        userId: user.id,
-      })
-      .exec();
-  }
-
   async cancelRide(rideId: mongoose.Types.ObjectId, user: UserDocument) {
     const canceledRide = await this.riderRideCollection.findOneAndUpdate(
       {

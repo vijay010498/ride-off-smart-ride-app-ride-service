@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   Patch,
   Post,
   UseGuards,
@@ -59,32 +58,6 @@ export class RideController {
     private readonly driverService: DriverService,
     private readonly riderService: RiderService,
   ) {}
-
-  @Get('/driver')
-  @ApiOperation({
-    summary: 'Get User Driver Rides',
-  })
-  @ApiResponse({
-    description: 'Get Driver Rides',
-    type: [DriverRideDto],
-  })
-  @Serialize(DriverRideDto)
-  getUserDriverRides(@CurrentUser() user: UserDocument) {
-    return this.driverService.getRides(user);
-  }
-
-  @Get('/rider')
-  @ApiOperation({
-    summary: 'Get User Rider Rides',
-  })
-  @ApiResponse({
-    description: 'Get Rider Rides',
-    type: [RiderRideDto],
-  })
-  @Serialize(RiderRideDto)
-  getUserRiderRides(@CurrentUser() user: UserDocument) {
-    return this.riderService.getRides(user);
-  }
   @Post('/driver')
   @UseGuards(IsFaceVerifiedGuard)
   @ApiOperation({
