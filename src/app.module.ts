@@ -16,6 +16,7 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
 import { SnsModule } from './sns/sns.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { SnsModule } from './sns/sns.module';
     UserModule,
     LocationModule,
     SnsModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
